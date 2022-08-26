@@ -1,10 +1,12 @@
 import IRenderer from '../IRenderer';
+import {WebGPUMesh} from "./Mesh";
+import {WebGPUModel} from "./Model";
+import {Camera} from "../generic/Camera";
+import {BasicPipeline} from "./pipeline/basic/BasicPipeline";
 
 export default class Renderer extends IRenderer {
-    // 🎞️ Frame Backings
     context: GPUCanvasContext;
 
-    // ⚙️ WebGPU Data Structures
     adapter: GPUAdapter;
     device: GPUDevice;
     queue: GPUQueue;
@@ -12,6 +14,13 @@ export default class Renderer extends IRenderer {
     // store target textures in class variables
     renderTargetView: GPUTextureView;
     depthTextureView: GPUTextureView;
+
+    cmdEncoder: GPUCommandEncoder;
+    passEncoder: GPURenderPassEncoder;
+
+    model: WebGPUModel;
+    basicPipeline: BasicPipeline;
+    camera: Camera;
 
     constructor(canvas: HTMLCanvasElement) {
         super(canvas);
@@ -30,6 +39,22 @@ export default class Renderer extends IRenderer {
         this.queue = this.device.queue;
 
         this.context = this.canvas.getContext('webgpu');
+
+        this.camera = new Camera([10.0, 10.0, 10.0], [0.0, 0.0, 0.0]);
+
+        // !TODO: delete after
+        const vtxs = new Float32Array([-1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, -1.0]);
+        const uvs = new Float32Array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0]);
+        const indices = new Uint32Array([0, 1, 2, 0, 2, 3, 2, 1, 0, 3, 2, 0]);
+
+        this.basicPipeline = new BasicPipeline(this);
+
+        const mesh = new WebGPUMesh(this);
+        mesh.declareAttributeBuffer(0, vtxs, 3);
+        mesh.declareAttributeBuffer(1, uvs, 2);
+        mesh.declareIndexBuffer(indices);
+
+        this.model = new WebGPUModel(this, this.basicPipeline, mesh);
     }
 
     private updateSwapchain(): void {
@@ -70,7 +95,7 @@ export default class Renderer extends IRenderer {
             view: this.renderTargetView,
             loadOp: 'clear',
             storeOp: 'store',
-            clearValue: [Math.sin(new Date().getTime() / 500.0), 0.5, 1.0, 1.0]
+            clearValue: [1.0, 0.5, Math.sin(new Date().getTime() / 500.0), 1.0]
         };
         const depthAttachment: GPURenderPassDepthStencilAttachment = {
             view: this.depthTextureView,
@@ -92,13 +117,26 @@ export default class Renderer extends IRenderer {
 
         const renderPassDesc = this.buildRenderPassDescriptor();
 
-        const commandEncoder = this.device.createCommandEncoder();
-        const pass = commandEncoder.beginRenderPass(renderPassDesc);
+        this.cmdEncoder = this.device.createCommandEncoder();
+        this.passEncoder = this.cmdEncoder.beginRenderPass(renderPassDesc);
 
-        pass.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
-        pass.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
+        this.passEncoder.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
+        this.passEncoder.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
 
-        pass.end();
-        this.queue.submit([commandEncoder.finish()]);
+        // draw
+        this.model.rotation[1] += 0.05;
+        this.model.rotation[2] += 0.05;
+
+        // update camera
+        this.camera.update(this.canvasDimension[0], this.canvasDimension[1]);
+
+        // draw
+        this.model.draw();
+
+        this.passEncoder.end();
+        this.queue.submit([this.cmdEncoder.finish()]);
+
+        // unset encoder
+        this.cmdEncoder = null;
     }
 }

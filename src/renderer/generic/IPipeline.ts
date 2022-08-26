@@ -3,7 +3,7 @@ export abstract class IPipeline {
     public abstract activate(): void;
 
     // Update pipeline global uniforms
-    protected abstract update(): void;
+    public abstract update(): void;
 
     // Destroy all pipeline resources
     public abstract destroy(): void;

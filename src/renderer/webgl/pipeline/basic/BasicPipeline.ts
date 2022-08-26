@@ -6,8 +6,8 @@ import {PipelineProgramBuilder} from "../helpers/PipelineProgramBuilder";
 import Renderer from "../../Renderer";
 
 export class BasicPipeline extends IWebGLPipeline {
-    private readonly localUniformViewMatrixLoc: WebGLUniformLocation;
-    private readonly localUniformPrjMatrixLoc: WebGLUniformLocation;
+    private readonly luViewMatrixLoc: WebGLUniformLocation;
+    private readonly luPrjMatrixLoc: WebGLUniformLocation;
 
     constructor(renderer: Renderer) {
         super(renderer);
@@ -18,13 +18,13 @@ export class BasicPipeline extends IWebGLPipeline {
 
         this.program = builder.build();
 
-        this.localUniformPrjMatrixLoc = this.ctx.getUniformLocation(this.program, 'prjMatrix');
-        this.localUniformViewMatrixLoc = this.ctx.getUniformLocation(this.program, 'viewMatrix');
+        this.luPrjMatrixLoc = this.ctx.getUniformLocation(this.program, 'prjMatrix');
+        this.luViewMatrixLoc = this.ctx.getUniformLocation(this.program, 'viewMatrix');
     }
 
-    protected update(): void {
+    public update(): void {
         // update globals like camera matrices
-        this.ctx.uniformMatrix4fv(this.localUniformPrjMatrixLoc, false, this.renderer.camera.projectionMatrixBytes);
-        this.ctx.uniformMatrix4fv(this.localUniformViewMatrixLoc, false, this.renderer.camera.viewMatrixBytes);
+        this.ctx.uniformMatrix4fv(this.luPrjMatrixLoc, false, this.renderer.camera.projectionMatrixBytes);
+        this.ctx.uniformMatrix4fv(this.luViewMatrixLoc, false, this.renderer.camera.viewMatrixBytes);
     }
 }
