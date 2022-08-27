@@ -1,8 +1,8 @@
 import IRenderer from '../IRenderer';
-import {WebGPUMesh} from "./Mesh";
-import {WebGPUModel} from "./Model";
-import {Camera} from "../generic/Camera";
-import {BasicPipeline} from "./pipeline/basic/BasicPipeline";
+import { Camera } from '../generic/Camera';
+import { BasicPipeline } from './pipeline/basic/BasicPipeline';
+import { Model } from './Model';
+import { Mesh } from './Mesh';
 
 export default class Renderer extends IRenderer {
     context: GPUCanvasContext;
@@ -18,7 +18,7 @@ export default class Renderer extends IRenderer {
     cmdEncoder: GPUCommandEncoder;
     passEncoder: GPURenderPassEncoder;
 
-    model: WebGPUModel;
+    model: Model;
     basicPipeline: BasicPipeline;
     camera: Camera;
 
@@ -49,12 +49,12 @@ export default class Renderer extends IRenderer {
 
         this.basicPipeline = new BasicPipeline(this);
 
-        const mesh = new WebGPUMesh(this);
-        mesh.declareAttributeBuffer(0, vtxs, 3);
-        mesh.declareAttributeBuffer(1, uvs, 2);
+        const mesh = new Mesh(this);
+        mesh.declareAttributeBuffer(0, vtxs);
+        mesh.declareAttributeBuffer(1, uvs);
         mesh.declareIndexBuffer(indices);
 
-        this.model = new WebGPUModel(this, this.basicPipeline, mesh);
+        this.model = new Model(this, this.basicPipeline, mesh);
     }
 
     private updateSwapchain(): void {
@@ -97,6 +97,7 @@ export default class Renderer extends IRenderer {
             storeOp: 'store',
             clearValue: [1.0, 0.5, Math.sin(new Date().getTime() / 500.0), 1.0]
         };
+
         const depthAttachment: GPURenderPassDepthStencilAttachment = {
             view: this.depthTextureView,
             depthClearValue: 1,
@@ -112,6 +113,11 @@ export default class Renderer extends IRenderer {
         };
     }
 
+    protected prepareTarget() {
+        this.passEncoder.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
+        this.passEncoder.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
+    }
+
     render(): void {
         this.updateSwapchain();
 
@@ -120,8 +126,7 @@ export default class Renderer extends IRenderer {
         this.cmdEncoder = this.device.createCommandEncoder();
         this.passEncoder = this.cmdEncoder.beginRenderPass(renderPassDesc);
 
-        this.passEncoder.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
-        this.passEncoder.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
+        this.prepareTarget();
 
         // draw
         this.model.rotation[1] += 0.05;

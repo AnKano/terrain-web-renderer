@@ -11,6 +11,8 @@ export abstract class IModel {
         this._scale = vec3.fromValues(1.0, 1.0, 1.0);
     }
 
+    protected abstract updateLocals(): void;
+
     public abstract draw(): void;
 
     get modelViewMatrix(): mat4 {

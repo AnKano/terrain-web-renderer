@@ -1,5 +1,5 @@
-import {IPipeline} from "../../generic/IPipeline";
-import Renderer from "../Renderer";
+import { IPipeline } from '../../generic/IPipeline';
+import Renderer from '../Renderer';
 
 export abstract class IWebGLPipeline extends IPipeline {
     protected ctx: WebGL2RenderingContext;
@@ -16,7 +16,6 @@ export abstract class IWebGLPipeline extends IPipeline {
 
     activate(): void {
         this.ctx.useProgram(this._program);
-        this.update();
     }
 
     destroy(): void {

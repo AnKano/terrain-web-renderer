@@ -1,19 +1,19 @@
 import { IModel } from '../generic/IModel';
 import Renderer from './Renderer';
-import { WebGPUMesh } from './Mesh';
 import { IWebGPUPipeline } from './pipeline/IWebGPUPipeline';
 import { reserveBuffer } from './utils/Utils';
+import { IMesh } from "../generic/IMesh";
 
-export class WebGPUModel extends IModel {
+export class Model extends IModel {
     private readonly renderer: Renderer;
 
-    private mesh: WebGPUMesh;
+    private mesh: IMesh;
     private pipeline: IWebGPUPipeline;
 
     private readonly luModelMatrixBuffer: GPUBuffer;
     private readonly luTintBuffer: GPUBuffer;
 
-    constructor(renderer: Renderer, pipeline: IWebGPUPipeline, mesh: WebGPUMesh) {
+    constructor(renderer: Renderer, pipeline: IWebGPUPipeline, mesh: IMesh) {
         super();
 
         this.renderer = renderer;
@@ -39,12 +39,11 @@ export class WebGPUModel extends IModel {
 
         // activate/actualize pipeline
         this.pipeline.activate();
+        this.pipeline.update();
         encoder.setBindGroup(0, this.pipeline.requestBindGroup([
             { binding: 2, resource: { buffer: this.luModelMatrixBuffer } },
             { binding: 3, resource: { buffer: this.luTintBuffer } },
         ]));
-
-        this.pipeline.update();
 
         this.updateLocals();
 

@@ -24,7 +24,7 @@ export class PipelineProgramBuilder {
     }
 
     public addFragmentShader(code: string): void {
-        this.fragmentShader =this.produceShader(code, this.ctx.FRAGMENT_SHADER);
+        this.fragmentShader = this.produceShader(code, this.ctx.FRAGMENT_SHADER);
     }
 
     public build(): WebGLProgram {

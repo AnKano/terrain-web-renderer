@@ -9,6 +9,8 @@ export default abstract class IRenderer {
         this.canvasSamples = 4;
     }
 
+    protected abstract prepareTarget(): void;
+
     public abstract init(): Promise<void>;
 
     public abstract render(): void;

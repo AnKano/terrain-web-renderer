@@ -1,6 +1,6 @@
-import {IMesh} from "../generic/IMesh";
+import { IMesh } from '../generic/IMesh';
 
-export class WebGLMesh extends IMesh {
+export class Mesh extends IMesh {
     private readonly ctx: WebGL2RenderingContext;
 
     private readonly vao: WebGLVertexArrayObject;

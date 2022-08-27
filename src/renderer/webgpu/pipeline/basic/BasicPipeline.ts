@@ -1,8 +1,8 @@
 import * as vertShader from './sources/basic.vert.wgsl';
 import * as fragShader from './sources/basic.frag.wgsl';
 
-import { IWebGPUPipeline } from '../IWebGPUPipeline';
 import Renderer from '../../Renderer';
+import { IWebGPUPipeline } from '../IWebGPUPipeline';
 import { reserveBuffer } from '../../utils/Utils';
 
 export class BasicPipeline extends IWebGPUPipeline {
@@ -14,13 +14,11 @@ export class BasicPipeline extends IWebGPUPipeline {
 
         // global pipeline buffers
         this.guProjMatrixBuffer = reserveBuffer(
-            this.renderer,
-            16 * 4,
+            this.renderer, 16 * 4,
             GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         );
         this.guViewMatrixBuffer = reserveBuffer(
-            this.renderer,
-            16 * 4,
+            this.renderer, 16 * 4,
             GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         );
 

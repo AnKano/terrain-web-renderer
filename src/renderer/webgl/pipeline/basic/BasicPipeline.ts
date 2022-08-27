@@ -1,9 +1,9 @@
 import * as vertShader from './sources/basic.vert.glsl';
 import * as fragShader from './sources/basic.frag.glsl';
 
-import {IWebGLPipeline} from "../IWebGLPipeline";
-import {PipelineProgramBuilder} from "../helpers/PipelineProgramBuilder";
-import Renderer from "../../Renderer";
+import Renderer from '../../Renderer';
+import { IWebGLPipeline } from '../IWebGLPipeline';
+import { PipelineProgramBuilder } from '../helpers/PipelineProgramBuilder';
 
 export class BasicPipeline extends IWebGLPipeline {
     private readonly luViewMatrixLoc: WebGLUniformLocation;
