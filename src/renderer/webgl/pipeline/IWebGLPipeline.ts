@@ -1,4 +1,4 @@
-import { IPipeline } from '../../generic/IPipeline';
+import { IPipeline } from '../../abstract/IPipeline';
 import WebGLRenderer from '../WebGLRenderer';
 
 export abstract class IWebGLPipeline extends IPipeline {

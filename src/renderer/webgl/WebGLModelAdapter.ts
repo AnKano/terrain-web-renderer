@@ -1,7 +1,7 @@
-import { IMeshAdapter } from '../generic/IMeshAdapter';
-import { IModelAdapter } from '../generic/IModelAdapter';
+import { IMeshAdapter } from '../abstract/IMeshAdapter';
+import { IModelAdapter } from '../abstract/IModelAdapter';
 import WebGLRenderer from './WebGLRenderer';
-import { Model } from '../abstract/Model';
+import { Model } from '../generic/Model';
 import { WebGLMesh } from './WebGLMesh';
 
 export class WebGLModelAdapter extends IModelAdapter {

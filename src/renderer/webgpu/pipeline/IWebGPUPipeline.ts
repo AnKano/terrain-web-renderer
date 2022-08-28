@@ -1,4 +1,4 @@
-import { IPipeline } from '../../generic/IPipeline';
+import { IPipeline } from '../../abstract/IPipeline';
 import WebGPURenderer from '../WebGPURenderer';
 
 export abstract class IWebGPUPipeline extends IPipeline {

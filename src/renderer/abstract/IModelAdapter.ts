@@ -1,4 +1,4 @@
-import {Model} from "../abstract/Model";
+import {Model} from "../generic/Model";
 
 export abstract class IModelAdapter {
     protected _general: Model;

@@ -1,7 +1,7 @@
 import { Mesh } from './Mesh';
 import { mat4, vec3 } from 'gl-matrix';
 import {RenderType} from "../IRenderer";
-import {IModelAdapter} from "../generic/IModelAdapter";
+import {IModelAdapter} from "../abstract/IModelAdapter";
 
 export class Model {
     private _mesh: Mesh;

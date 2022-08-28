@@ -1,4 +1,4 @@
-import {Model} from "./abstract/Model";
+import {Model} from "./generic/Model";
 
 export class Scene {
     private readonly _models: Model[];

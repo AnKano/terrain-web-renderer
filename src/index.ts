@@ -2,8 +2,8 @@ import WebGPURenderer from './renderer/webgpu/WebGPURenderer';
 import WebGLRenderer from './renderer/webgl/WebGLRenderer';
 import { Scene } from './renderer/Scene';
 import { PerspectiveCamera } from './renderer/generic/camera/PerspectiveCamera';
-import { Model } from './renderer/abstract/Model';
-import { Mesh } from './renderer/abstract/Mesh';
+import { Model } from './renderer/generic/Model';
+import { Mesh } from './renderer/generic/Mesh';
 
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 

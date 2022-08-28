@@ -1,7 +1,7 @@
-import { IMeshAdapter } from '../generic/IMeshAdapter';
+import { IMeshAdapter } from '../abstract/IMeshAdapter';
 import WebGPURenderer from './WebGPURenderer';
 import { createBuffer } from './utils/Utils';
-import { Mesh } from '../abstract/Mesh';
+import { Mesh } from '../generic/Mesh';
 
 export class WebGPUMesh extends IMeshAdapter {
     private readonly renderer: WebGPURenderer;

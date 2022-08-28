@@ -1,9 +1,9 @@
-import { IModelAdapter } from '../generic/IModelAdapter';
+import { IModelAdapter } from '../abstract/IModelAdapter';
 import WebGPURenderer from './WebGPURenderer';
 import { reserveBuffer } from './utils/Utils';
-import { IMeshAdapter } from "../generic/IMeshAdapter";
+import { IMeshAdapter } from "../abstract/IMeshAdapter";
 import {WebGPUMesh} from "./WebGPUMesh";
-import {Model} from "../abstract/Model";
+import {Model} from "../generic/Model";
 
 export class WebGPUModelAdapter extends IModelAdapter {
     private readonly renderer: WebGPURenderer;

@@ -1,5 +1,5 @@
-import { IMeshAdapter } from '../generic/IMeshAdapter';
-import { Mesh } from '../abstract/Mesh';
+import { IMeshAdapter } from '../abstract/IMeshAdapter';
+import { Mesh } from '../generic/Mesh';
 import WebGLRenderer from './WebGLRenderer';
 
 export class WebGLMesh extends IMeshAdapter {
