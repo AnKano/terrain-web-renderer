@@ -2,10 +2,13 @@ import { Mesh } from './Mesh';
 import { mat4, vec3 } from 'gl-matrix';
 import {RenderType} from "../IRenderer";
 import {IModelAdapter} from "../abstract/IModelAdapter";
+import {Texture} from "./Texture";
 
 export class Model {
+    private readonly _specifics: Map<RenderType, IModelAdapter>;
+
     private _mesh: Mesh;
-    private readonly _specificModels: Map<RenderType, IModelAdapter>;
+    private _texture: Texture;
 
     private _position: vec3;
     private _rotation: vec3;
@@ -13,7 +16,7 @@ export class Model {
 
     public constructor() {
         this._mesh = new Mesh();
-        this._specificModels = new Map<RenderType, IModelAdapter>();
+        this._specifics = new Map<RenderType, IModelAdapter>();
 
         this._position = vec3.fromValues(0.0, 0.0, 0.0);
         this._rotation = vec3.fromValues(0.0, 0.0, 0.0);
@@ -32,6 +35,14 @@ export class Model {
         return modelViewMatrix;
     }
 
+    get texture(): Texture {
+        return this._texture;
+    }
+
+    set texture(value: Texture) {
+        this._texture = value;
+    }
+
     get mesh(): Mesh {
         return this._mesh;
     }
@@ -40,8 +51,8 @@ export class Model {
         this._mesh = value;
     }
 
-    get specificModels(): Map<RenderType, IModelAdapter> {
-        return this._specificModels;
+    get specifics(): Map<RenderType, IModelAdapter> {
+        return this._specifics;
     }
 
     get modelViewMatrixBytes(): Float32Array {

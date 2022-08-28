@@ -8,11 +8,11 @@ export class Scene {
     }
 
     public update(): void {
-
+        //!TODO: i dunno what can be updated
     }
 
     public destroy(): void {
-
+        //!TODO: implement
     }
 
     add(model: Model): void {

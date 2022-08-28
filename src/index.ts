@@ -4,6 +4,7 @@ import { Scene } from './renderer/Scene';
 import { PerspectiveCamera } from './renderer/generic/camera/PerspectiveCamera';
 import { Model } from './renderer/generic/Model';
 import { Mesh } from './renderer/generic/Mesh';
+import {Texture} from "./renderer/generic/Texture";
 
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 
@@ -22,8 +23,11 @@ mesh.declareAttributeBuffer(0, positions, 3);
 mesh.declareAttributeBuffer(1, uvs, 2);
 mesh.declareIndexBuffer(indices);
 
+const texture = new Texture('https://tile.openstreetmap.org/0/0/0.png');
+
 const model = new Model();
 model.mesh = mesh;
+model.texture = texture;
 
 scene.add(model);
 

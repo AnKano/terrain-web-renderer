@@ -14,11 +14,13 @@ export class BasicPipeline extends IWebGPUPipeline {
 
         // global pipeline buffers
         this.guProjMatrixBuffer = reserveBuffer(
-            this.renderer, 16 * 4,
+            this.renderer,
+            16 * 4,
             GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         );
         this.guViewMatrixBuffer = reserveBuffer(
-            this.renderer, 16 * 4,
+            this.renderer,
+            16 * 4,
             GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         );
 
@@ -60,12 +62,7 @@ export class BasicPipeline extends IWebGPUPipeline {
         };
 
         // misc description
-        const primitive: GPUPrimitiveState = {
-            frontFace: 'cw',
-            cullMode: 'none',
-            topology: 'triangle-list'
-        };
-
+        const primitive: GPUPrimitiveState = { frontFace: 'cw', cullMode: 'none', topology: 'triangle-list' };
         const depthStencil: GPUDepthStencilState = {
             depthWriteEnabled: true,
             depthCompare: 'less-equal',
@@ -74,22 +71,13 @@ export class BasicPipeline extends IWebGPUPipeline {
 
         this.uniformBindGroupLayout = this.renderer.device.createBindGroupLayout({
             entries: [
-                {
-                    binding: 0,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: 'uniform' }
-                },
-                {
-                    binding: 1,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: 'uniform' }
-                },
-                {
-                    binding: 2,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: 'uniform' }
-                },
-                { binding: 3, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } }
+                { binding: 0, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 1, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 2, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 3, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+                // diffuse
+                { binding: 4, visibility: GPUShaderStage.FRAGMENT, sampler: { type: 'filtering' } },
+                { binding: 5, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: 'float' } }
             ]
         });
 
