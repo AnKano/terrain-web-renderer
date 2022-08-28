@@ -1,10 +1,12 @@
-import IRenderer from '../IRenderer';
-import { Camera } from '../generic/Camera';
+import IRenderer, { RenderType } from '../IRenderer';
 import { BasicPipeline } from './pipeline/basic/BasicPipeline';
-import { Model } from './Model';
-import { Mesh } from './Mesh';
+import { WebGPUModelAdapter } from './WebGPUModelAdapter';
+import { Scene } from '../Scene';
+import { ICamera } from '../generic/camera/ICamera';
 
-export default class Renderer extends IRenderer {
+export default class WebGPURenderer extends IRenderer {
+    readonly TYPE: RenderType = RenderType.WebGPU;
+
     context: GPUCanvasContext;
 
     adapter: GPUAdapter;
@@ -18,9 +20,8 @@ export default class Renderer extends IRenderer {
     cmdEncoder: GPUCommandEncoder;
     passEncoder: GPURenderPassEncoder;
 
-    model: Model;
-    basicPipeline: BasicPipeline;
-    camera: Camera;
+    activePipeline: BasicPipeline;
+    camera: ICamera;
 
     constructor(canvas: HTMLCanvasElement) {
         super(canvas);
@@ -40,21 +41,8 @@ export default class Renderer extends IRenderer {
 
         this.context = this.canvas.getContext('webgpu');
 
-        this.camera = new Camera([10.0, 10.0, 10.0], [0.0, 0.0, 0.0]);
-
-        // !TODO: delete after
-        const vtxs = new Float32Array([-1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, -1.0]);
-        const uvs = new Float32Array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0]);
-        const indices = new Uint32Array([0, 1, 2, 0, 2, 3, 2, 1, 0, 3, 2, 0]);
-
-        this.basicPipeline = new BasicPipeline(this);
-
-        const mesh = new Mesh(this);
-        mesh.declareAttributeBuffer(0, vtxs);
-        mesh.declareAttributeBuffer(1, uvs);
-        mesh.declareIndexBuffer(indices);
-
-        this.model = new Model(this, this.basicPipeline, mesh);
+        //!TODO: remove it
+        this.activePipeline = new BasicPipeline(this);
     }
 
     private updateSwapchain(): void {
@@ -113,35 +101,45 @@ export default class Renderer extends IRenderer {
         };
     }
 
-    protected prepareTarget() {
-        this.passEncoder.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
-        this.passEncoder.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
-    }
-
-    render(): void {
-        this.updateSwapchain();
-
+    protected startRender() {
         const renderPassDesc = this.buildRenderPassDescriptor();
 
         this.cmdEncoder = this.device.createCommandEncoder();
         this.passEncoder = this.cmdEncoder.beginRenderPass(renderPassDesc);
 
-        this.prepareTarget();
+        this.passEncoder.setViewport(0, 0, this.canvasDimension[0], this.canvasDimension[1], 0, 1);
+        this.passEncoder.setScissorRect(0, 0, this.canvasDimension[0], this.canvasDimension[1]);
+    }
 
-        // draw
-        this.model.rotation[1] += 0.05;
-        this.model.rotation[2] += 0.05;
-
-        // update camera
-        this.camera.update(this.canvasDimension[0], this.canvasDimension[1]);
-
-        // draw
-        this.model.draw();
-
+    protected endRender(): void {
         this.passEncoder.end();
         this.queue.submit([this.cmdEncoder.finish()]);
 
         // unset encoder
         this.cmdEncoder = null;
+    }
+
+    render(scene: Scene, camera: ICamera): void {
+        this.updateSwapchain();
+
+        this.startRender();
+
+        // update camera
+        this.camera = camera;
+        camera.update(this.canvasDimension[0], this.canvasDimension[1]);
+
+        // draw scene
+        scene.models.forEach((model) => {
+            if (!model.specificModels.has(this.TYPE)) model.specificModels.set(this.TYPE, new WebGPUModelAdapter(this, model));
+
+            model.rotation[1] += 0.05;
+            model.rotation[2] += 0.05;
+
+            model.specificModels.get(this.TYPE).draw();
+        });
+
+        // end frame rendering
+        this.endRender();
+        this.camera = null;
     }
 }

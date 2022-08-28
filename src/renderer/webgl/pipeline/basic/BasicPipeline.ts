@@ -1,7 +1,7 @@
 import * as vertShader from './sources/basic.vert.glsl';
 import * as fragShader from './sources/basic.frag.glsl';
 
-import Renderer from '../../Renderer';
+import WebGLRenderer from '../../WebGLRenderer';
 import { IWebGLPipeline } from '../IWebGLPipeline';
 import { PipelineProgramBuilder } from '../helpers/PipelineProgramBuilder';
 
@@ -9,7 +9,7 @@ export class BasicPipeline extends IWebGLPipeline {
     private readonly luViewMatrixLoc: WebGLUniformLocation;
     private readonly luPrjMatrixLoc: WebGLUniformLocation;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: WebGLRenderer) {
         super(renderer);
 
         const builder = new PipelineProgramBuilder(this.ctx);

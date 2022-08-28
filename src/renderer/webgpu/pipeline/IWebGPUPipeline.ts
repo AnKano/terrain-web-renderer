@@ -1,14 +1,14 @@
 import { IPipeline } from '../../generic/IPipeline';
-import Renderer from '../Renderer';
+import WebGPURenderer from '../WebGPURenderer';
 
 export abstract class IWebGPUPipeline extends IPipeline {
-    protected renderer: Renderer;
+    protected renderer: WebGPURenderer;
 
     private _pipeline: GPURenderPipeline;
     protected uniformBindGroupLayout: GPUBindGroupLayout;
     protected globalUniforms: GPUBindGroupEntry[];
 
-    protected constructor(renderer: Renderer) {
+    protected constructor(renderer: WebGPURenderer) {
         super();
 
         this.renderer = renderer;

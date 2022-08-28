@@ -1,7 +1,7 @@
 import * as vertShader from './sources/basic.vert.wgsl';
 import * as fragShader from './sources/basic.frag.wgsl';
 
-import Renderer from '../../Renderer';
+import WebGPURenderer from '../../WebGPURenderer';
 import { IWebGPUPipeline } from '../IWebGPUPipeline';
 import { reserveBuffer } from '../../utils/Utils';
 
@@ -9,7 +9,7 @@ export class BasicPipeline extends IWebGPUPipeline {
     private readonly guProjMatrixBuffer: GPUBuffer;
     private readonly guViewMatrixBuffer: GPUBuffer;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: WebGPURenderer) {
         super(renderer);
 
         // global pipeline buffers

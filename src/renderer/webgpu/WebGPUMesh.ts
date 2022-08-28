@@ -1,23 +1,36 @@
-import { IMesh } from '../generic/IMesh';
-import Renderer from './Renderer';
+import { IMeshAdapter } from '../generic/IMeshAdapter';
+import WebGPURenderer from './WebGPURenderer';
 import { createBuffer } from './utils/Utils';
+import { Mesh } from '../abstract/Mesh';
 
-export class Mesh extends IMesh {
-    private readonly renderer: Renderer;
+export class WebGPUMesh extends IMeshAdapter {
+    private readonly renderer: WebGPURenderer;
 
     private readonly attributeBuffers: Map<number, GPUBuffer>;
     private indicesBuffer: GPUBuffer;
     private indicesBufferLength: number;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: WebGPURenderer, meshDescription: Mesh) {
         super();
-
         this.attributeBuffers = new Map<number, GPUBuffer>();
-
         this.renderer = renderer;
+
+        this.restoreMeshFromDescription(meshDescription);
     }
 
-    declareAttributeBuffer(index: number, data: Float32Array | Uint32Array, elementsForEachVtx: number | undefined = undefined): void {
+    private restoreMeshFromDescription(meshDescription: Mesh) {
+        meshDescription.attributeBuffers.forEach((desc) => {
+            this.declareAttributeBuffer(desc.index, desc.data, desc.elementsForVtx);
+        });
+
+        this.declareIndexBuffer(meshDescription.indexesBuffer);
+    }
+
+    declareAttributeBuffer(
+        index: number,
+        data: Float32Array | Uint32Array,
+        elementsForEachVtx: number | undefined = undefined
+    ): void {
         this.attributeBuffers.set(index, createBuffer(this.renderer, data, GPUBufferUsage.VERTEX));
     }
 

@@ -1,7 +1,7 @@
-import GeoScene from '../src/GeoScene';
+import TRender from '../src/TRender';
 
 test('Try to instantiate and run not configured scene', async () => {
-    const scene = new GeoScene();
+    const scene = new TRender();
     try {
         await scene.start();
     } catch (err) {
@@ -10,7 +10,7 @@ test('Try to instantiate and run not configured scene', async () => {
 });
 
 test('Try to setup undefined renderer mode', async () => {
-    const scene = new GeoScene();
+    const scene = new TRender();
     try {
         scene.setRenderer(100, undefined);
     } catch (err) {

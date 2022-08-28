@@ -1,8 +1,8 @@
-import { glMatrix, mat4, vec3 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 
-export class Camera {
-    private NEAR_DISTANCE = 0.1;
-    private FAR_DISTANCE = 100.0;
+export abstract class ICamera {
+    protected NEAR_DISTANCE = 0.1;
+    protected FAR_DISTANCE = 100.0;
 
     _position: vec3;
     _target: vec3;
@@ -48,17 +48,7 @@ export class Camera {
         });
     }
 
-    update(viewportWidth: number, viewportHeight: number) {
-        const aspectRatio = viewportWidth / viewportHeight;
-        mat4.perspective(
-            this._projectionMatrix,
-            glMatrix.toRadian(45.0),
-            aspectRatio,
-            this.NEAR_DISTANCE,
-            this.FAR_DISTANCE
-        );
-        mat4.lookAt(this._viewMatrix, this._position, this._target, this.up);
-    }
+    public abstract update(viewportWidth: number, viewportHeight: number): void;
 
     get position(): vec3 {
         return this._position;

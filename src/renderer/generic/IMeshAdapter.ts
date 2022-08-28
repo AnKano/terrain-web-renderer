@@ -1,4 +1,4 @@
-export abstract class IMesh {
+export abstract class IMeshAdapter {
     public abstract declareAttributeBuffer(
         index: number,
         data: Float32Array | Uint32Array,

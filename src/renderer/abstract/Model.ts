@@ -1,19 +1,24 @@
+import { Mesh } from './Mesh';
 import { mat4, vec3 } from 'gl-matrix';
+import {RenderType} from "../IRenderer";
+import {IModelAdapter} from "../generic/IModelAdapter";
 
-export abstract class IModel {
+export class Model {
+    private _mesh: Mesh;
+    private readonly _specificModels: Map<RenderType, IModelAdapter>;
+
     private _position: vec3;
     private _rotation: vec3;
     private _scale: vec3;
 
-    protected constructor() {
+    public constructor() {
+        this._mesh = new Mesh();
+        this._specificModels = new Map<RenderType, IModelAdapter>();
+
         this._position = vec3.fromValues(0.0, 0.0, 0.0);
         this._rotation = vec3.fromValues(0.0, 0.0, 0.0);
         this._scale = vec3.fromValues(1.0, 1.0, 1.0);
     }
-
-    protected abstract updateLocals(): void;
-
-    public abstract draw(): void;
 
     get modelViewMatrix(): mat4 {
         const modelViewMatrix = mat4.create();
@@ -25,6 +30,18 @@ export abstract class IModel {
         mat4.scale(modelViewMatrix, modelViewMatrix, this._scale);
 
         return modelViewMatrix;
+    }
+
+    get mesh(): Mesh {
+        return this._mesh;
+    }
+
+    set mesh(value: Mesh) {
+        this._mesh = value;
+    }
+
+    get specificModels(): Map<RenderType, IModelAdapter> {
+        return this._specificModels;
     }
 
     get modelViewMatrixBytes(): Float32Array {

@@ -1,3 +1,11 @@
+import { Scene } from './Scene';
+import { ICamera } from './generic/camera/ICamera';
+
+export enum RenderType {
+    WebGL,
+    WebGPU
+}
+
 export default abstract class IRenderer {
     protected canvas: HTMLCanvasElement;
     protected canvasDimension: [number, number, number];
@@ -9,11 +17,13 @@ export default abstract class IRenderer {
         this.canvasSamples = 4;
     }
 
-    protected abstract prepareTarget(): void;
+    protected abstract startRender(): void;
+
+    protected abstract endRender(): void;
 
     public abstract init(): Promise<void>;
 
-    public abstract render(): void;
+    public abstract render(scene: Scene, camera: ICamera): void;
 
     public updateCanvas(): boolean {
         const clWidth = this.canvas.clientWidth;
@@ -28,5 +38,5 @@ export default abstract class IRenderer {
         }
 
         return false;
-    };
+    }
 }

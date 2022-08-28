@@ -1,6 +1,6 @@
-import Renderer from '../Renderer';
+import WebGPURenderer from '../WebGPURenderer';
 
-export const createBuffer = (renderer: Renderer, arr: Float32Array | Uint32Array, usage: number) => {
+export const createBuffer = (renderer: WebGPURenderer, arr: Float32Array | Uint32Array, usage: number) => {
     const desc = {
         size: (arr.byteLength + 3) & ~3,
         usage,
@@ -16,7 +16,7 @@ export const createBuffer = (renderer: Renderer, arr: Float32Array | Uint32Array
     return buffer;
 };
 
-export const reserveBuffer = (renderer: Renderer, size: number, usage: number) => {
+export const reserveBuffer = (renderer: WebGPURenderer, size: number, usage: number) => {
     const desc = {
         size: (size + 3) & ~3,
         usage,

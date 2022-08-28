@@ -1,20 +1,33 @@
-import { IMesh } from '../generic/IMesh';
+import { IMeshAdapter } from '../generic/IMeshAdapter';
+import { Mesh } from '../abstract/Mesh';
+import WebGLRenderer from './WebGLRenderer';
 
-export class Mesh extends IMesh {
+export class WebGLMesh extends IMeshAdapter {
+    private readonly renderer: WebGLRenderer;
     private readonly ctx: WebGL2RenderingContext;
 
     private readonly vao: WebGLVertexArrayObject;
-    private readonly attributeBuffers: { [idx: number]: WebGLBuffer };
+    private readonly attributeBuffers: Map<number, WebGLBuffer>;
     private indicesBuffer: WebGLBuffer;
     private indicesBufferLength: number;
 
-    constructor(context: WebGL2RenderingContext) {
+    constructor(renderer: WebGLRenderer, meshDescription: Mesh) {
         super();
 
-        this.attributeBuffers = {};
+        this.renderer = renderer;
+        this.ctx = renderer.ctx;
 
-        this.ctx = context;
-        this.vao = this.ctx.createVertexArray();
+        this.attributeBuffers = new Map<number, GPUBuffer>();
+
+        this.restoreMeshFromDescription(meshDescription);
+    }
+
+    private restoreMeshFromDescription(meshDescription: Mesh) {
+        meshDescription.attributeBuffers.forEach((desc) => {
+            this.declareAttributeBuffer(desc.index, desc.data, desc.elementsForVtx);
+        });
+
+        this.declareIndexBuffer(meshDescription.indexesBuffer);
     }
 
     declareAttributeBuffer(index: number, data: Float32Array | Uint32Array, elementsForEachVtx: number) {
@@ -29,7 +42,7 @@ export class Mesh extends IMesh {
         this.ctx.bufferData(this.ctx.ARRAY_BUFFER, data, this.ctx.STATIC_DRAW);
         this.ctx.vertexAttribPointer(index, elementsForEachVtx, this.ctx.FLOAT, false, 0, 0);
 
-        this.attributeBuffers[index] = buffer;
+        this.attributeBuffers.set(index, buffer);
 
         // unbind VAO
         this.ctx.bindVertexArray(null);
