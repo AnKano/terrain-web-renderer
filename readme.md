@@ -4,4 +4,4 @@
 
 SRTM and raster hybrid renderer (WebGPU+WebGL). At the moment just draws a plane with texture in any renderer
 
-![Current Demo](github-assets\demo.gif)
+![Current Demo](github-assets/demo.gif)
