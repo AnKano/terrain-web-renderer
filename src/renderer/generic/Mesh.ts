@@ -1,3 +1,5 @@
+import {Model} from "./Model";
+
 type AttributeBufferDescription = {
     index: number;
     data: Float32Array | Uint32Array;
@@ -5,6 +7,8 @@ type AttributeBufferDescription = {
 };
 
 export class Mesh {
+    model: Model;
+
     private readonly _attributeBuffers: AttributeBufferDescription[];
 
     private _indexesBuffer: Uint32Array;

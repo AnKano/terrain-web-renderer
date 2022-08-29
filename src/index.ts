@@ -1,15 +1,16 @@
-import WebGPURenderer from './renderer/webgpu/WebGPURenderer';
+// import WebGPURenderer from './renderer/webgpu/WebGPURenderer';
 import WebGLRenderer from './renderer/webgl/WebGLRenderer';
 import { Scene } from './renderer/Scene';
 import { PerspectiveCamera } from './renderer/generic/camera/PerspectiveCamera';
 import { Model } from './renderer/generic/Model';
 import { Mesh } from './renderer/generic/Mesh';
-import {Texture} from "./renderer/generic/Texture";
+import { Texture } from './renderer/generic/Texture';
+import {BasicMaterial} from "./renderer/generic/materials/BasicMaterial";
 
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 
-const renderer = new WebGPURenderer(canvas);
-// const renderer = new WebGLRenderer(canvas);
+const renderer = new WebGLRenderer(canvas);
+// const renderer = new WebGPURenderer(canvas);
 
 const camera = new PerspectiveCamera([10.0, 10.0, 10.0], [0.0, 0.0, 0.0]);
 const scene = new Scene();
@@ -23,11 +24,14 @@ mesh.declareAttributeBuffer(0, positions, 3);
 mesh.declareAttributeBuffer(1, uvs, 2);
 mesh.declareIndexBuffer(indices);
 
+const basicMaterial = new BasicMaterial();
+
 const texture = new Texture('https://tile.openstreetmap.org/0/0/0.png');
+basicMaterial.texture = texture;
 
 const model = new Model();
 model.mesh = mesh;
-model.texture = texture;
+model.material = basicMaterial;
 
 scene.add(model);
 

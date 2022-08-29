@@ -1,14 +1,12 @@
-import {RenderType} from "../IRenderer";
-import {ITextureAdapter} from "../abstract/ITextureAdapter";
+import {IMaterial} from "./materials/IMaterial";
 
 export class Texture {
+    material: IMaterial;
+
     private _data: ImageBitmap;
     public loadPromise: Promise<void>;
 
-    private readonly _specifics: Map<RenderType, ITextureAdapter>;
-
     constructor(url: string) {
-        this._specifics = new Map<RenderType, ITextureAdapter>();
 
         this.loadPromise = new Promise<void>((resolve) => {
             this.loadAsync(url).then(() => {
@@ -22,10 +20,6 @@ export class Texture {
         const blob = await response.blob();
 
         this._data = await createImageBitmap(blob);
-    }
-
-    get specifics(): Map<RenderType, ITextureAdapter> {
-        return this._specifics;
     }
 
     get data(): ImageBitmap {

@@ -1,14 +1,14 @@
 import { Mesh } from './Mesh';
 import { mat4, vec3 } from 'gl-matrix';
-import {RenderType} from "../IRenderer";
-import {IModelAdapter} from "../abstract/IModelAdapter";
-import {Texture} from "./Texture";
+import { RenderType } from '../IRenderer';
+import { IModelAdapter } from '../abstract/IModelAdapter';
+import { IMaterial } from './materials/IMaterial';
 
 export class Model {
     private readonly _specifics: Map<RenderType, IModelAdapter>;
 
-    private _mesh: Mesh;
-    private _texture: Texture;
+    private _mesh: Mesh | null;
+    private _material: IMaterial | null;
 
     private _position: vec3;
     private _rotation: vec3;
@@ -35,19 +35,21 @@ export class Model {
         return modelViewMatrix;
     }
 
-    get texture(): Texture {
-        return this._texture;
+    get material(): IMaterial | null {
+        return this._material;
     }
 
-    set texture(value: Texture) {
-        this._texture = value;
+    set material(value: IMaterial) {
+        value.model = this;
+        this._material = value;
     }
 
-    get mesh(): Mesh {
+    get mesh(): Mesh | null {
         return this._mesh;
     }
 
     set mesh(value: Mesh) {
+        value.model = this;
         this._mesh = value;
     }
 
