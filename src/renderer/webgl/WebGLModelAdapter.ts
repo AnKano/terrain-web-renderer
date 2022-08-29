@@ -2,20 +2,20 @@ import { IModelAdapter } from '../abstract/IModelAdapter';
 import WebGLRenderer from './WebGLRenderer';
 import { Model } from '../generic/Model';
 import { WebGLMesh } from './WebGLMesh';
-import { WebGLTex } from './WebGLTexture';
-import { BasicMaterial } from '../generic/materials/BasicMaterial';
+import { IWebGLPipeline } from './pipeline/IWebGLPipeline';
+import { IMaterial } from '../generic/materials/IMaterial';
+import { IPipelineMaterialLogic } from '../abstract/IPipelineMaterialLogic';
 
 export class WebGLModelAdapter extends IModelAdapter {
     private readonly renderer: WebGLRenderer;
     private readonly ctx: WebGL2RenderingContext;
 
-    private readonly mesh: WebGLMesh;
-    private readonly material: BasicMaterial;
-    private readonly texture: WebGLTex;
+    private readonly _mesh: WebGLMesh;
+    private readonly logic: IPipelineMaterialLogic;
+    private readonly _material: IMaterial;
+    private _activePipeline: IWebGLPipeline;
 
-    private readonly luModelMatrixLoc: WebGLUniformLocation;
-    private readonly luTintArrayLoc: WebGLUniformLocation;
-    private readonly luDiffuseLoc: WebGLUniformLocation;
+    private luModelMatrixLoc: WebGLUniformLocation;
 
     constructor(renderer: WebGLRenderer, description: Model) {
         super(description);
@@ -23,34 +23,47 @@ export class WebGLModelAdapter extends IModelAdapter {
         this.renderer = renderer;
         this.ctx = this.renderer.ctx;
 
-        this.mesh = new WebGLMesh(renderer, description.mesh);
-        this.material = description.material as BasicMaterial;
-        this.texture = new WebGLTex(renderer, this.material.texture);
+        this._mesh = new WebGLMesh(renderer, description.mesh);
+        this._material = description.material;
 
-        this.luModelMatrixLoc = this.ctx.getUniformLocation(this.renderer.activePipeline.program, 'modelMatrix');
-        this.luTintArrayLoc = this.ctx.getUniformLocation(this.renderer.activePipeline.program, 'tintArray');
-        this.luDiffuseLoc = this.ctx.getUniformLocation(this.renderer.activePipeline.program, 'diffuse');
+        this.invokePipeline();
+        this.logic = this._activePipeline.producePipelineMaterialLogic(this.renderer, this);
+    }
+
+    protected invokePipeline(): void {
+        const pipelineFunction = this._material.shaders.get(this.renderer.TYPE).bind(this);
+        this._activePipeline = pipelineFunction(this.renderer) as IWebGLPipeline;
     }
 
     updateLocals() {
+        this.luModelMatrixLoc = this.ctx.getUniformLocation(this._activePipeline.program, 'modelMatrix');
         this.ctx.uniformMatrix4fv(this.luModelMatrixLoc, false, this.general.modelViewMatrixBytes);
-        this.ctx.uniform4fv(this.luTintArrayLoc, this.material.tint);
-
-        this.ctx.activeTexture(this.ctx.TEXTURE0 + 0);
-        this.ctx.bindTexture(this.ctx.TEXTURE_2D, this.texture.texture);
-
-        this.ctx.uniform1i(this.luDiffuseLoc, 0);
     }
 
     draw(): void {
         // activate related pipeline
-        this.renderer.activePipeline.activate();
-        this.renderer.activePipeline.update();
+        this.invokePipeline();
+        this._activePipeline.activate();
+        this._activePipeline.update();
 
-        // set local pipeline variables
+        // set local pipeline variables related to material
+        this.logic.updateLocals();
+        // set local pipeline variables related to model
         this.updateLocals();
 
         // draw mesh geometry
-        this.mesh.draw();
+        this._mesh.draw();
+    }
+
+    get mesh(): WebGLMesh {
+        return this._mesh;
+    }
+
+    get material(): IMaterial {
+        return this._material;
+    }
+
+    get activePipeline(): IWebGLPipeline {
+        return this._activePipeline;
     }
 }

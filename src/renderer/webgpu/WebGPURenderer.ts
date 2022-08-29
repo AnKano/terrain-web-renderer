@@ -1,5 +1,4 @@
 import IRenderer, { RenderType } from '../IRenderer';
-import { BasicPipeline } from './pipeline/basic/BasicPipeline';
 import { WebGPUModelAdapter } from './WebGPUModelAdapter';
 import { Scene } from '../Scene';
 import { ICamera } from '../generic/camera/ICamera';
@@ -20,7 +19,6 @@ export default class WebGPURenderer extends IRenderer {
     cmdEncoder: GPUCommandEncoder;
     passEncoder: GPURenderPassEncoder;
 
-    activePipeline: BasicPipeline;
     camera: ICamera;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -40,9 +38,6 @@ export default class WebGPURenderer extends IRenderer {
         this.queue = this.device.queue;
 
         this.context = this.canvas.getContext('webgpu');
-
-        //!TODO: remove it
-        this.activePipeline = new BasicPipeline(this);
     }
 
     private updateSwapchain(): void {

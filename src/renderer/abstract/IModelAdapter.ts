@@ -1,4 +1,4 @@
-import {Model} from "../generic/Model";
+import { Model } from '../generic/Model';
 
 export abstract class IModelAdapter {
     protected _general: Model;
@@ -6,6 +6,8 @@ export abstract class IModelAdapter {
     protected constructor(general: Model) {
         this._general = general;
     }
+
+    protected abstract invokePipeline(): void;
 
     protected abstract updateLocals(): void;
 

@@ -3,35 +3,45 @@ import WebGPURenderer from './WebGPURenderer';
 import { reserveBuffer } from './utils/Utils';
 import { WebGPUMesh } from './WebGPUMesh';
 import { Model } from '../generic/Model';
-import { WebGPUTex } from './WebGPUTexture';
-import { BasicMaterial } from '../generic/materials/BasicMaterial';
+import { IWebGPUPipeline } from './pipeline/IWebGPUPipeline';
+import {IMaterial} from "../generic/materials/IMaterial";
+import {IWebGPUPipelineMaterialLogic} from "../abstract/IPipelineMaterialLogic";
 
 export class WebGPUModelAdapter extends IModelAdapter {
     private readonly renderer: WebGPURenderer;
 
-    private mesh: WebGPUMesh;
-    private material: BasicMaterial;
-    private texture: WebGPUTex;
+    private _mesh: WebGPUMesh;
+    private _material: IMaterial;
+    private _activePipeline: IWebGPUPipeline;
+    private logic: IWebGPUPipelineMaterialLogic;
 
     private readonly luModelMatrixBuffer: GPUBuffer;
-    private readonly luTintBuffer: GPUBuffer;
 
     constructor(renderer: WebGPURenderer, description: Model) {
         super(description);
 
         this.renderer = renderer;
 
-        this.mesh = new WebGPUMesh(renderer, description.mesh);
-        this.material = description.material as BasicMaterial;
-        this.texture = new WebGPUTex(renderer, this.material.texture);
+        this._mesh = new WebGPUMesh(renderer, description.mesh);
+        this._material = description.material;
 
-        this.luModelMatrixBuffer = reserveBuffer(this.renderer, 16 * 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
-        this.luTintBuffer = reserveBuffer(this.renderer, 4 * 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+        this.luModelMatrixBuffer = reserveBuffer(
+            this.renderer,
+            16 * 4,
+            GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        );
+
+        this.invokePipeline();
+        this.logic = this._activePipeline.producePipelineMaterialLogic(this.renderer, this) as IWebGPUPipelineMaterialLogic;
+    }
+
+    protected invokePipeline(): void {
+        const pipelineFunction = this._material.shaders.get(this.renderer.TYPE).bind(this);
+        this._activePipeline = pipelineFunction(this.renderer) as IWebGPUPipeline;
     }
 
     updateLocals() {
         this.renderer.queue.writeBuffer(this.luModelMatrixBuffer, 0, this.general.modelViewMatrixBytes);
-        this.renderer.queue.writeBuffer(this.luTintBuffer, 0, this.material.tint);
     }
 
     draw(): void {
@@ -39,23 +49,34 @@ export class WebGPUModelAdapter extends IModelAdapter {
         if (!encoder) throw 'Encoder currently undefined!';
 
         // activate/actualize pipeline
-        this.renderer.activePipeline.activate();
-        this.renderer.activePipeline.update();
+        // activate related pipeline
+        this.invokePipeline();
+        this._activePipeline.activate();
+        this._activePipeline.update();
 
-        encoder.setBindGroup(
-            0,
-            this.renderer.activePipeline.requestBindGroup([
-                { binding: 2, resource: { buffer: this.luModelMatrixBuffer } },
-                { binding: 3, resource: { buffer: this.luTintBuffer } },
-                // diffuse
-                { binding: 4, resource: this.texture.sampler },
-                { binding: 5, resource: this.texture.texture.createView() }
-            ])
-        );
-
+        this.logic.updateLocals();
         this.updateLocals();
 
+        let bindGroup: GPUBindGroupEntry[] = [
+            { binding: 2, resource: { buffer: this.luModelMatrixBuffer } },
+            ...this.logic.requestBindGroup()
+        ];
+
+        encoder.setBindGroup(0, this._activePipeline.requestBindGroup(bindGroup));
+
         // draw geometry
-        this.mesh.draw();
+        this._mesh.draw();
+    }
+
+    get mesh(): WebGPUMesh {
+        return this._mesh;
+    }
+
+    get material(): IMaterial {
+        return this._material;
+    }
+
+    get activePipeline(): IWebGPUPipeline {
+        return this._activePipeline;
     }
 }

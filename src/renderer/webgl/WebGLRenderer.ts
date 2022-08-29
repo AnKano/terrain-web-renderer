@@ -1,5 +1,4 @@
 import IRenderer, { RenderType } from '../IRenderer';
-import { BasicPipeline } from './pipeline/basic/BasicPipeline';
 import { WebGLModelAdapter } from './WebGLModelAdapter';
 import { Scene } from '../Scene';
 import { ICamera } from '../generic/camera/ICamera';
@@ -9,7 +8,6 @@ export default class WebGLRenderer extends IRenderer {
 
     ctx: WebGL2RenderingContext;
 
-    activePipeline: BasicPipeline;
     camera: ICamera;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -26,9 +24,6 @@ export default class WebGLRenderer extends IRenderer {
         this.ctx.enable(this.ctx.DEPTH_TEST);
         this.ctx.enable(this.ctx.CULL_FACE);
         this.ctx.cullFace(this.ctx.FRONT);
-
-        // !TODO: delete after
-        this.activePipeline = new BasicPipeline(this);
     }
 
     protected startRender() {
@@ -54,12 +49,10 @@ export default class WebGLRenderer extends IRenderer {
 
         // draw scene
         scene.models.forEach((model) => {
-            if (!model.specifics.has(this.TYPE))
-                model.specifics.set(this.TYPE, new WebGLModelAdapter(this, model));
-
             model.rotation[1] += 0.05;
             model.rotation[2] += 0.05;
 
+            if (!model.specifics.has(this.TYPE)) model.specifics.set(this.TYPE, new WebGLModelAdapter(this, model));
             model.specifics.get(this.TYPE).draw();
         });
 
