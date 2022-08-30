@@ -2,6 +2,9 @@
 
 #StandWithUkraine 🇺🇦
 
-SRTM and raster hybrid renderer (WebGPU+WebGL). At the moment just draws a plane with texture in any renderer
+SRTM and TSM-tiles raster hybrid renderer (WebGPU+WebGL)
 
-![Current Demo](github-assets/demo.png)
+![Satellite Demo](github-assets/demo.png)
+
+## Animation 
+![Satellite Demo](github-assets/demo1.gif)

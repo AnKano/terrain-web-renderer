@@ -125,9 +125,7 @@ export default class WebGPURenderer extends IRenderer {
 
         // draw scene
         scene.models.forEach((model) => {
-            if (!model.specifics.has(this.TYPE))
-                model.specifics.set(this.TYPE, new WebGPUModelAdapter(this, model));
-
+            if (!model.specifics.has(this.TYPE)) model.specifics.set(this.TYPE, new WebGPUModelAdapter(this, model));
             model.specifics.get(this.TYPE).draw();
         });
 

@@ -8,7 +8,9 @@ import { Texture } from './renderer/generic/Texture';
 import { BasicMaterial } from './renderer/generic/materials/BasicMaterial';
 import { Core } from './geo/Core';
 import * as LRU from 'lru-cache';
-import {SRTMSource} from "./elevation/SRTMSource";
+import { SRTMSource } from './elevation/SRTMSource';
+import { GridMesh } from './ mesh/GridMesh';
+import { glMatrix } from 'gl-matrix';
 
 const source = new SRTMSource();
 {
@@ -49,7 +51,6 @@ const source = new SRTMSource();
         .addPart('https://192.168.0.100:8081/N54E142.hgt');
 }
 
-
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 
 const renderer = new WebGLRenderer(canvas);
@@ -57,15 +58,6 @@ const renderer = new WebGLRenderer(canvas);
 
 const camera = new PerspectiveCamera([1.0, 5.0, 10.0], [0.0, 0.0, 0.0]);
 const scene = new Scene();
-
-const positions = new Float32Array([-1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.0, -1.0]);
-const uvs = new Float32Array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0]);
-const indices = new Uint32Array([2, 1, 0, 3, 2, 0]); //[0, 1, 2, 0, 2, 3]
-
-const mesh = new Mesh();
-mesh.declareAttributeBuffer(0, positions, 3);
-mesh.declareAttributeBuffer(1, uvs, 2);
-mesh.declareIndexBuffer(indices);
 
 const core = new Core();
 core.setWorldPosition(46.9641, 142.7285);
@@ -88,17 +80,27 @@ const render = (): void => {
             if (!tile.isVisible) return;
 
             if (!modelsCache.has(tile.quadcode)) {
+                const tilecode = tile.tilecode;
+                const heights = source.getDataForTile(tilecode[2], tilecode[0], tilecode[1], 64, 64);
+                const grid = new GridMesh(1.0, 1.0, heights);
+
+                const mesh = new Mesh();
+                mesh.declareAttributeBuffer(0, new Float32Array(grid.vertices), 3);
+                mesh.declareAttributeBuffer(1, new Float32Array(grid.uvs), 2);
+                mesh.declareIndexBuffer(new Uint32Array(grid.indices));
+
                 const model = new Model();
                 model.mesh = mesh;
                 model.position = [tile.center[0], 0.0, tile.center[1]];
-                model.scale = [tile.side / 2, 1.0, tile.side / 2];
+                model.scale = [tile.side, tile.side, 0.01];
+                model.rotation = [glMatrix.toRadian(90), 0.0, 0.0];
 
                 const material = new BasicMaterial();
                 material.diffuse = new Texture(
-                    `https://tile.openstreetmap.org/${tile.tilecode[2]}/${tile.tilecode[0]}/${tile.tilecode[1]}.png`
+                    `https://tile.openstreetmap.org/${tilecode[2]}/${tilecode[0]}/${tilecode[1]}.png`
                 );
                 material.tint = new Float32Array([Math.random(), Math.random(), Math.random(), 1.0]);
-                material.tintCoefficient = 0.25;
+                material.tintCoefficient = 0.0;
                 model.material = material;
 
                 modelsCache.set(tile.quadcode, model);

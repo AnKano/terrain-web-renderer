@@ -18,6 +18,7 @@ export class WebGLMesh extends IMeshAdapter {
         this.ctx = renderer.ctx;
 
         this.attributeBuffers = new Map<number, GPUBuffer>();
+        this.vao = renderer.ctx.createVertexArray();
 
         this.restoreMeshFromDescription(meshDescription);
     }
@@ -62,9 +63,11 @@ export class WebGLMesh extends IMeshAdapter {
 
         // unbind VAO
         this.ctx.bindVertexArray(null);
+        console.log(this, this.vao)
     }
 
     draw() {
+
         // bind VAO
         this.ctx.bindVertexArray(this.vao);
 

@@ -1,5 +1,5 @@
-import {SRTMSourcePart} from "./SRTMSourcePart";
-import {GeographyConverter} from "../geo/math/Converter";
+import { SRTMSourcePart } from './SRTMSourcePart';
+import { GeographyConverter } from '../geo/math/Converter';
 
 export interface HeightData {
     kernel: number[];
@@ -31,17 +31,11 @@ export class SRTMSource {
         return this.parsePoint(lat, lon);
     }
 
-    public getDataForTile(
-        zoom: number, x: number, y: number,
-        slicesX: number, slicesY: number
-    ): HeightData {
+    public getDataForTile(zoom: number, x: number, y: number, slicesX: number, slicesY: number): HeightData {
         return this.getDataFromXYZ(zoom, x, y, slicesX, slicesY);
     }
 
-    private getDataFromXYZ(
-        zoom: number, x: number, y: number,
-        slicesX: number, slicesY: number
-    ): HeightData {
+    private getDataFromXYZ(zoom: number, x: number, y: number, slicesX: number, slicesY: number): HeightData {
         const minimalX = GeographyConverter.tile2lon(x, zoom);
         const maximalY = GeographyConverter.tile2lat(y, zoom);
         const maximalX = GeographyConverter.tile2lon(x + 1, zoom);
@@ -50,19 +44,18 @@ export class SRTMSource {
         const offsetX = Math.abs(minimalX - maximalX) / (slicesX - 1);
         const offsetY = Math.abs(maximalY - minimalY) / (slicesY - 1);
 
-        return this.collectTileKernel(
-            minimalX, minimalY,
-            offsetX, offsetY,
-            slicesX, slicesY
-        );
+        return this.collectTileKernel(minimalX, minimalY, offsetX, offsetY, slicesX, slicesY);
     }
 
     private collectTileKernel(
-        minimalX: number, minimalY: number,
-        offsetX: number, offsetY: number,
-        slicesX: number, slicesY: number
+        minimalX: number,
+        minimalY: number,
+        offsetX: number,
+        offsetY: number,
+        slicesX: number,
+        slicesY: number
     ): HeightData {
-        const kernel = new Array((slicesX) * (slicesY)).fill(0);
+        const kernel = new Array(slicesX * slicesY).fill(0);
 
         const north = [];
         const south = [];
