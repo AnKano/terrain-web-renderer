@@ -25,7 +25,6 @@
     "webpack-dev-server": "^4.10.0"
   },
   "dependencies": {
-    "@types/lru-cache": "^7.10.10",
     "gl-matrix": "^3.4.3",
     "lru-cache": "^7.14.0"
   }
