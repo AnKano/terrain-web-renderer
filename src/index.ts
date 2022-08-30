@@ -8,11 +8,52 @@ import { Texture } from './renderer/generic/Texture';
 import { BasicMaterial } from './renderer/generic/materials/BasicMaterial';
 import { Core } from './geo/Core';
 import * as LRU from 'lru-cache';
+import {SRTMSource} from "./elevation/SRTMSource";
+
+const source = new SRTMSource();
+{
+    source
+        .addPart('https://192.168.0.100:8081/N45E140.hgt')
+        .addPart('https://192.168.0.100:8081/N45E141.hgt')
+        .addPart('https://192.168.0.100:8081/N45E142.hgt')
+        .addPart('https://192.168.0.100:8081/N46E141.hgt')
+        .addPart('https://192.168.0.100:8081/N46E142.hgt')
+        .addPart('https://192.168.0.100:8081/N46E143.hgt')
+        .addPart('https://192.168.0.100:8081/N47E141.hgt')
+        .addPart('https://192.168.0.100:8081/N47E142.hgt')
+        .addPart('https://192.168.0.100:8081/N47E143.hgt')
+        .addPart('https://192.168.0.100:8081/N48E140.hgt')
+        .addPart('https://192.168.0.100:8081/N48E141.hgt')
+        .addPart('https://192.168.0.100:8081/N48E142.hgt')
+        .addPart('https://192.168.0.100:8081/N48E144.hgt')
+        .addPart('https://192.168.0.100:8081/N49E140.hgt')
+        .addPart('https://192.168.0.100:8081/N49E142.hgt')
+        .addPart('https://192.168.0.100:8081/N49E143.hgt')
+        .addPart('https://192.168.0.100:8081/N49E144.hgt')
+        .addPart('https://192.168.0.100:8081/N50E140.hgt')
+        .addPart('https://192.168.0.100:8081/N50E142.hgt')
+        .addPart('https://192.168.0.100:8081/N50E143.hgt')
+        .addPart('https://192.168.0.100:8081/N51E140.hgt')
+        .addPart('https://192.168.0.100:8081/N51E141.hgt')
+        .addPart('https://192.168.0.100:8081/N51E142.hgt')
+        .addPart('https://192.168.0.100:8081/N51E143.hgt')
+        .addPart('https://192.168.0.100:8081/N52E140.hgt')
+        .addPart('https://192.168.0.100:8081/N52E141.hgt')
+        .addPart('https://192.168.0.100:8081/N52E142.hgt')
+        .addPart('https://192.168.0.100:8081/N52E143.hgt')
+        .addPart('https://192.168.0.100:8081/N53E140.hgt')
+        .addPart('https://192.168.0.100:8081/N53E141.hgt')
+        .addPart('https://192.168.0.100:8081/N53E142.hgt')
+        .addPart('https://192.168.0.100:8081/N53E143.hgt')
+        .addPart('https://192.168.0.100:8081/N54E140.hgt')
+        .addPart('https://192.168.0.100:8081/N54E142.hgt');
+}
+
 
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 
-// const renderer = new WebGLRenderer(canvas);
-const renderer = new WebGPURenderer(canvas);
+const renderer = new WebGLRenderer(canvas);
+// const renderer = new WebGPURenderer(canvas);
 
 const camera = new PerspectiveCamera([1.0, 5.0, 10.0], [0.0, 0.0, 0.0]);
 const scene = new Scene();
@@ -29,9 +70,7 @@ mesh.declareIndexBuffer(indices);
 const core = new Core();
 core.setWorldPosition(46.9641, 142.7285);
 
-const modelsCache = new LRU<string, Model>({
-    max: 250
-});
+const modelsCache = new LRU<string, Model>({ max: 250 });
 
 const render = (): void => {
     window.requestAnimationFrame(render);
@@ -59,7 +98,7 @@ const render = (): void => {
                     `https://tile.openstreetmap.org/${tile.tilecode[2]}/${tile.tilecode[0]}/${tile.tilecode[1]}.png`
                 );
                 material.tint = new Float32Array([Math.random(), Math.random(), Math.random(), 1.0]);
-                material.tintCoefficient = 0.5;
+                material.tintCoefficient = 0.25;
                 model.material = material;
 
                 modelsCache.set(tile.quadcode, model);
@@ -69,7 +108,9 @@ const render = (): void => {
         });
     });
 
-    console.info('draw', scene.models.length, 'elements')
+    // console.info('draw', scene.models.length, 'elements');
 };
 
-renderer.init().then(render);
+Promise.all([source.loadEverything()]).then(() => {
+    renderer.init().then(render);
+});
