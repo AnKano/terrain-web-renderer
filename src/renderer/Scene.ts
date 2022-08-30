@@ -1,7 +1,7 @@
 import {Model} from "./generic/Model";
 
 export class Scene {
-    private readonly _models: Model[];
+    private _models: Model[];
 
     constructor() {
         this._models = [];
@@ -15,7 +15,11 @@ export class Scene {
         //!TODO: implement
     }
 
-    add(model: Model): void {
+    public wipe(): void {
+        this._models = [];
+    }
+
+    public add(model: Model): void {
         this._models.push(model);
     }
 
