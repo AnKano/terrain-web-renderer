@@ -6,7 +6,7 @@ module.exports = {
     context: path.join(__dirname, 'src'),
     entry: './index.ts',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'demo'),
         filename: 'index.js',
         clean: true
     },

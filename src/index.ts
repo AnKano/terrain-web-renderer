@@ -10,8 +10,8 @@ import { Core } from './geo/Core';
 
 const canvas = document.getElementById('gfx') as HTMLCanvasElement;
 
-// const renderer = new WebGLRenderer(canvas);
-const renderer = new WebGPURenderer(canvas);
+const renderer = new WebGLRenderer(canvas);
+// const renderer = new WebGPURenderer(canvas);
 
 const camera = new PerspectiveCamera([1.0, 5.0, 10.0], [0.0, 0.0, 0.0]);
 const scene = new Scene();
