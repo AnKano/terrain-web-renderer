@@ -1,4 +1,4 @@
-import {IMaterial} from "./materials/IMaterial";
+import { IMaterial } from './materials/IMaterial';
 
 export class Texture {
     material: IMaterial;
@@ -6,8 +6,11 @@ export class Texture {
     private _data: ImageBitmap;
     public loadPromise: Promise<void>;
 
-    constructor(url: string) {
+    constructor(url: string | null = null) {
+        if (url != null) this.loadUrl(url);
+    }
 
+    loadUrl(url: string) {
         this.loadPromise = new Promise<void>((resolve) => {
             this.loadAsync(url).then(() => {
                 resolve();

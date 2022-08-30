@@ -22,28 +22,28 @@ export abstract class ICamera {
         window.addEventListener('keypress', (event) => {
             event.preventDefault();
             if (event.code === 'KeyW') {
-                position[2] -= 2000.0;
-                target[2] -= 2000.0;
+                position[2] -= 0.1;
+                target[2] -= 0.1;
             }
             if (event.code === 'KeyS') {
-                position[2] += 2000.0;
-                target[2] += 2000.0;
+                position[2] += 0.1;
+                target[2] += 0.1;
             }
 
             if (event.code === 'KeyA') {
-                position[0] -= 2000.0;
-                target[0] -= 2000.0;
+                position[0] -= 0.1;
+                target[0] -= 0.1;
             }
             if (event.code === 'KeyD') {
-                position[0] += 2000.0;
-                target[0] += 2000.0;
+                position[0] += 0.1;
+                target[0] += 0.1;
             }
 
             if (event.code === 'KeyZ') {
-                position[1] += 2000.0;
+                position[1] += 0.1;
             }
             if (event.code === 'KeyX') {
-                position[1] -= 2000.0;
+                position[1] -= 0.1;
             }
         });
     }

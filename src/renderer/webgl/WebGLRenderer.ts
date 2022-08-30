@@ -49,9 +49,6 @@ export default class WebGLRenderer extends IRenderer {
 
         // draw scene
         scene.models.forEach((model) => {
-            model.rotation[1] += 0.05;
-            model.rotation[2] += 0.05;
-
             if (!model.specifics.has(this.TYPE)) model.specifics.set(this.TYPE, new WebGLModelAdapter(this, model));
             model.specifics.get(this.TYPE).draw();
         });

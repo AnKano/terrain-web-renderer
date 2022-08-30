@@ -128,9 +128,6 @@ export default class WebGPURenderer extends IRenderer {
             if (!model.specifics.has(this.TYPE))
                 model.specifics.set(this.TYPE, new WebGPUModelAdapter(this, model));
 
-            model.rotation[1] += 0.05;
-            model.rotation[2] += 0.05;
-
             model.specifics.get(this.TYPE).draw();
         });
 

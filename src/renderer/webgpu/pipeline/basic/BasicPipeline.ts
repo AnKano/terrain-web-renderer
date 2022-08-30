@@ -156,7 +156,6 @@ export class BasicPipelineMaterialLogic extends IWebGPUPipelineMaterialLogic {
 
         this.renderer.queue.writeBuffer(this.luTintBuffer, 0, this.tint);
 
-        // this.tintCoefficient = Math.abs(Math.sin(new Date().getTime() / 500.0));
         // write f32 value with padding (everything should be padded to 16 bytes)
         this.renderer.queue.writeBuffer(this.luTintCoefficientLoc, 0,
             new Float32Array([this.tintCoefficient, 0, 0, 0]));
