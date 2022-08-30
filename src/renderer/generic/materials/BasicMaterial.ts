@@ -17,7 +17,7 @@ export class BasicMaterial extends IMaterial {
         this._shaders.set(RenderType.WebGL, WGLBasic.activate);
         this._shaders.set(RenderType.WebGPU, WGPUBasic.activate);
 
-        this._tint = new Float32Array([Math.random(), Math.random(), Math.random(), 1.0]);
+        this._tint = new Float32Array([0.0, 0.0, 0.0, 1.0]);
         this._tintCoefficient = 0.5;
     }
 

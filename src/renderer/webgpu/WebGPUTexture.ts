@@ -5,7 +5,7 @@ import {Texture} from "../generic/Texture";
 export class WebGPUTex extends ITextureAdapter {
     private renderer: WebGPURenderer;
 
-    private general: Texture;
+    private readonly _general: Texture;
 
     private _texture: GPUTexture;
     private readonly _sampler: GPUSampler;
@@ -15,13 +15,13 @@ export class WebGPUTex extends ITextureAdapter {
 
         this.renderer = renderer;
 
-        this.general = texture;
+        this._general = texture;
 
         this._sampler = this.renderer.device.createSampler({magFilter: 'linear', minFilter: 'linear'});
         this.createFromArrayBuffer(new Uint8Array([0, 0, 0, 255]));
 
         texture.loadPromise.then(() => {
-            this.createFromBitmap(this.general.data);
+            this.createFromBitmap(this._general.data);
         });
     }
 
@@ -71,6 +71,10 @@ export class WebGPUTex extends ITextureAdapter {
             format: 'rgba8unorm',
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
         });
+    }
+
+    get general(): Texture {
+        return this._general;
     }
 
     get texture(): GPUTexture {

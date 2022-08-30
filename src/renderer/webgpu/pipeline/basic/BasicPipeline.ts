@@ -141,15 +141,22 @@ export class BasicPipelineMaterialLogic extends IWebGPUPipelineMaterialLogic {
         this.model = model;
         this.material = this.model.material as BasicMaterial;
 
-        this.tint = this.material.tint;
-        this.tintCoefficient = this.material.tintCoefficient;
         this.diffuseTexture = new WebGPUTex(renderer, this.material.diffuse);
     }
 
     updateLocals(): void {
+        if (this.tint != this.material.tint)
+            this.tint = this.material.tint;
+
+        if (this.tintCoefficient != this.material.tintCoefficient)
+            this.tintCoefficient = this.material.tintCoefficient;
+
+        if (this.diffuseTexture.general != this.material.diffuse)
+            this.diffuseTexture = new WebGPUTex(this.renderer, this.material.diffuse);
+
         this.renderer.queue.writeBuffer(this.luTintBuffer, 0, this.tint);
 
-        this.tintCoefficient = Math.abs(Math.sin(new Date().getTime() / 500.0));
+        // this.tintCoefficient = Math.abs(Math.sin(new Date().getTime() / 500.0));
         // write f32 value with padding (everything should be padded to 16 bytes)
         this.renderer.queue.writeBuffer(this.luTintCoefficientLoc, 0,
             new Float32Array([this.tintCoefficient, 0, 0, 0]));

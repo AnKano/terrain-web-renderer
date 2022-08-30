@@ -6,7 +6,7 @@ export class WebGLTex extends ITextureAdapter {
     private ctx: WebGL2RenderingContext;
     private renderer: WebGLRenderer;
 
-    private general: Texture;
+    private readonly _general: Texture;
 
     private _texture: WebGLTexture;
 
@@ -16,12 +16,12 @@ export class WebGLTex extends ITextureAdapter {
         this.renderer = renderer;
         this.ctx = renderer.ctx;
 
-        this.general = texture;
+        this._general = texture;
 
         this.createFromArrayBuffer(new Uint8Array([0, 0, 0, 255]));
 
         texture.loadPromise.then(() => {
-            this.createFromBitmap(this.general.data);
+            this.createFromBitmap(this._general.data);
         });
     }
 
@@ -107,5 +107,9 @@ export class WebGLTex extends ITextureAdapter {
 
     get texture(): WebGLTexture {
         return this._texture;
+    }
+
+    get general(): Texture {
+        return this._general;
     }
 }
