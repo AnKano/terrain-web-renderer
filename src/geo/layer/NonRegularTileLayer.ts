@@ -1,9 +1,9 @@
 import { Core } from '../Core';
 import { ITileLayer } from './ITileLayer';
-import {ITile} from "../tile/ITile";
-import {ICamera} from "../../renderer/generic/camera/ICamera";
+import { ITile } from '../tile/ITile';
+import { ICamera } from '../../renderer/generic/camera/ICamera';
 
-export class NonRegularTileLayer extends ITileLayer{
+export class NonRegularTileLayer extends ITileLayer {
     constructor(core: Core) {
         super(core);
     }
@@ -13,9 +13,9 @@ export class NonRegularTileLayer extends ITileLayer{
         this.frustumCulling.update(camera.projectionMatrix, camera.viewMatrix);
 
         this.tiles = [];
-        ['0', '1', '2', '3'].forEach(postfix => this.tiles.push(new ITile(postfix, this)));
+        ['0', '1', '2', '3'].forEach((postfix) => this.tiles.push(new ITile(postfix, this)));
 
-        this.divide(this.tiles);
+        this.divide(this.tiles, this.maxLOD, 1.0);
 
         this.tiles = this.tiles.sort((a: ITile, b: ITile) => a.quadcode.length - b.quadcode.length);
     }

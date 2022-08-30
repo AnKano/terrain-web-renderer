@@ -60,23 +60,29 @@ export class FrustumCulling {
     testAABB(minX: number, minY: number, minZ: number, maxX: number, maxY: number, maxZ: number): boolean {
         return (
             this.nX[0] * (this.nX[0] < 0 ? minX : maxX) +
-            this.nX[1] * (this.nX[1] < 0 ? minY : maxY) +
-            this.nX[2] * (this.nX[2] < 0 ? minZ : maxZ) >= -this.nX[3] &&
+                this.nX[1] * (this.nX[1] < 0 ? minY : maxY) +
+                this.nX[2] * (this.nX[2] < 0 ? minZ : maxZ) >=
+                -this.nX[3] &&
             this.pX[0] * (this.pX[0] < 0 ? minX : maxX) +
-            this.pX[1] * (this.pX[1] < 0 ? minY : maxY) +
-            this.pX[2] * (this.pX[2] < 0 ? minZ : maxZ) >= -this.pX[3] &&
+                this.pX[1] * (this.pX[1] < 0 ? minY : maxY) +
+                this.pX[2] * (this.pX[2] < 0 ? minZ : maxZ) >=
+                -this.pX[3] &&
             this.nY[0] * (this.nY[0] < 0 ? minX : maxX) +
-            this.nY[1] * (this.nY[1] < 0 ? minY : maxY) +
-            this.nY[2] * (this.nY[2] < 0 ? minZ : maxZ) >= -this.nY[3] &&
+                this.nY[1] * (this.nY[1] < 0 ? minY : maxY) +
+                this.nY[2] * (this.nY[2] < 0 ? minZ : maxZ) >=
+                -this.nY[3] &&
             this.pY[0] * (this.pY[0] < 0 ? minX : maxX) +
-            this.pY[1] * (this.pY[1] < 0 ? minY : maxY) +
-            this.pY[2] * (this.pY[2] < 0 ? minZ : maxZ) >= -this.pY[3] &&
+                this.pY[1] * (this.pY[1] < 0 ? minY : maxY) +
+                this.pY[2] * (this.pY[2] < 0 ? minZ : maxZ) >=
+                -this.pY[3] &&
             this.nZ[0] * (this.nZ[0] < 0 ? minX : maxX) +
-            this.nZ[1] * (this.nZ[1] < 0 ? minY : maxY) +
-            this.nZ[2] * (this.nZ[2] < 0 ? minZ : maxZ) >= -this.nZ[3] &&
+                this.nZ[1] * (this.nZ[1] < 0 ? minY : maxY) +
+                this.nZ[2] * (this.nZ[2] < 0 ? minZ : maxZ) >=
+                -this.nZ[3] &&
             this.pZ[0] * (this.pZ[0] < 0 ? minX : maxX) +
-            this.pZ[1] * (this.pZ[1] < 0 ? minY : maxY) +
-            this.pZ[2] * (this.pZ[2] < 0 ? minZ : maxZ) >= -this.pZ[3]
+                this.pZ[1] * (this.pZ[1] < 0 ? minY : maxY) +
+                this.pZ[2] * (this.pZ[2] < 0 ? minZ : maxZ) >=
+                -this.pZ[3]
         );
     }
 }

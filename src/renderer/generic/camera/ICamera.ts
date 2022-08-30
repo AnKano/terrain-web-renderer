@@ -11,6 +11,8 @@ export abstract class ICamera {
     _projectionMatrix: mat4;
     _viewMatrix: mat4;
 
+    private readonly step: number = 0.5;
+
     constructor(position: vec3, target: vec3) {
         this._position = position;
         this._target = target;
@@ -22,28 +24,28 @@ export abstract class ICamera {
         window.addEventListener('keypress', (event) => {
             event.preventDefault();
             if (event.code === 'KeyW') {
-                position[2] -= 0.1;
-                target[2] -= 0.1;
+                position[2] -= this.step;
+                target[2] -= this.step;
             }
             if (event.code === 'KeyS') {
-                position[2] += 0.1;
-                target[2] += 0.1;
+                position[2] += this.step;
+                target[2] += this.step;
             }
 
             if (event.code === 'KeyA') {
-                position[0] -= 0.1;
-                target[0] -= 0.1;
+                position[0] -= this.step;
+                target[0] -= this.step;
             }
             if (event.code === 'KeyD') {
-                position[0] += 0.1;
-                target[0] += 0.1;
+                position[0] += this.step;
+                target[0] += this.step;
             }
 
             if (event.code === 'KeyZ') {
-                position[1] += 0.1;
+                position[1] += this.step;
             }
             if (event.code === 'KeyX') {
-                position[1] -= 0.1;
+                position[1] -= this.step;
             }
         });
     }

@@ -4,7 +4,6 @@ import { Point } from '../object/Points';
 export class GeographyConverter {
     static readonly R: number = 6378137.0;
     static readonly MAX_LATITUDE: number = 85.0511287798;
-    static readonly ECC: number = 6378137.0;
     static readonly MULTIPLIER: number = 0.001;
 
     static project(latlon: LatLon): Point {

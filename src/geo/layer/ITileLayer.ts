@@ -1,8 +1,8 @@
-import {Core} from "../Core";
-import {vec3} from "gl-matrix";
-import {ITile} from "../tile/ITile";
-import {FrustumCulling} from "../FrustumCulling";
-import {ICamera} from "../../renderer/generic/camera/ICamera";
+import { Core } from '../Core';
+import { vec3 } from 'gl-matrix';
+import { ITile } from '../tile/ITile';
+import { FrustumCulling } from '../FrustumCulling';
+import { ICamera } from '../../renderer/generic/camera/ICamera';
 
 export abstract class ITileLayer {
     protected readonly minLOD: number;
@@ -45,9 +45,8 @@ export abstract class ITileLayer {
 
             if (this.screenSpaceError(currentItem, target) && currentDepth <= depth) {
                 checkList.splice(count, 1);
-                ['0', '1', '2', '3'].forEach(postfix => checkList.push(new ITile(quadcode + postfix, this)));
-            } else
-                count++;
+                ['0', '1', '2', '3'].forEach((postfix) => checkList.push(new ITile(quadcode + postfix, this)));
+            } else count++;
         }
     }
 
@@ -84,8 +83,6 @@ export abstract class ITileLayer {
         const minY = -1.0;
         const maxY = 1.0;
 
-        return this.frustumCulling.testAABB(
-            minX, minY, minZ, maxX, maxY, maxZ
-        );
+        return this.frustumCulling.testAABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 }
