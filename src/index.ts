@@ -9,7 +9,7 @@ import { BasicMaterial } from './renderer/generic/materials/BasicMaterial';
 import { Core } from './geo/Core';
 import * as LRU from 'lru-cache';
 import { SRTMSource } from './elevation/SRTMSource';
-import { GridMesh } from './ mesh/GridMesh';
+import { GridMesh } from './mesh/GridMesh';
 import { glMatrix } from 'gl-matrix';
 
 const source = new SRTMSource();
@@ -104,13 +104,13 @@ const render = (): void => {
                 model.material = material;
 
                 modelsCache.set(tile.quadcode, model);
+
+                console.log(tile)
             }
 
             scene.add(modelsCache.get(tile.quadcode));
         });
     });
-
-    // console.info('draw', scene.models.length, 'elements');
 };
 
 Promise.all([source.loadEverything()]).then(() => {

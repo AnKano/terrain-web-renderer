@@ -39,11 +39,11 @@ export class SRTMSourcePart {
         const regex = new RegExp('([NS])(\\d+)([EW])(\\d+)');
         const result = regex.exec(fileName);
 
-        const mYSign = (result[1] == 'N') ? 1 : -1;
+        const mYSign = result[1] == 'N' ? 1 : -1;
         const mYVal = Number.parseInt(result[2]);
         const mY = mYSign * mYVal;
 
-        const mXSign = (result[3] == 'E') ? 1 : -1;
+        const mXSign = result[3] == 'E' ? 1 : -1;
         const mXVal = Number.parseInt(result[4]);
         const mX = mXSign * mXVal;
 
@@ -54,7 +54,7 @@ export class SRTMSourcePart {
         this._xOpposite = mX + 1.0;
 
         this._pixelWidth = 1.0 / 3601.0;
-        this._pixelHeight =  1.0 / 3601.0;
+        this._pixelHeight = 1.0 / 3601.0;
     }
 
     get data(): Uint8Array {

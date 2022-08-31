@@ -1,4 +1,4 @@
-import {Model} from "./generic/Model";
+import { Model } from './generic/Model';
 
 export class Scene {
     private _models: Model[];

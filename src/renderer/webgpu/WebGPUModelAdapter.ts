@@ -4,8 +4,8 @@ import { reserveBuffer } from './utils/Utils';
 import { WebGPUMesh } from './WebGPUMesh';
 import { Model } from '../generic/Model';
 import { IWebGPUPipeline } from './pipeline/IWebGPUPipeline';
-import {IMaterial} from "../generic/materials/IMaterial";
-import {IWebGPUPipelineMaterialLogic} from "../abstract/IPipelineMaterialLogic";
+import { IMaterial } from '../generic/materials/IMaterial';
+import { IWebGPUPipelineMaterialLogic } from '../abstract/IPipelineMaterialLogic';
 
 export class WebGPUModelAdapter extends IModelAdapter {
     private readonly renderer: WebGPURenderer;
@@ -32,7 +32,10 @@ export class WebGPUModelAdapter extends IModelAdapter {
         );
 
         this.invokePipeline();
-        this.logic = this._activePipeline.producePipelineMaterialLogic(this.renderer, this) as IWebGPUPipelineMaterialLogic;
+        this.logic = this._activePipeline.producePipelineMaterialLogic(
+            this.renderer,
+            this
+        ) as IWebGPUPipelineMaterialLogic;
     }
 
     protected invokePipeline(): void {

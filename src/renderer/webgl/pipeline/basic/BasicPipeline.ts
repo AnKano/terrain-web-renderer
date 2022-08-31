@@ -77,11 +77,9 @@ export class BasicPipelineMaterialLogic extends IPipelineMaterialLogic {
     }
 
     updateLocals(): void {
-        if (this.tint != this.material.tint)
-            this.tint = this.material.tint;
+        if (this.tint != this.material.tint) this.tint = this.material.tint;
 
-        if (this.tintCoefficient != this.material.tintCoefficient)
-            this.tintCoefficient = this.material.tintCoefficient;
+        if (this.tintCoefficient != this.material.tintCoefficient) this.tintCoefficient = this.material.tintCoefficient;
 
         if (this.diffuseTexture.general != this.material.diffuse)
             this.diffuseTexture = new WebGLTex(this.renderer, this.material.diffuse);

@@ -2,12 +2,12 @@ import * as vertShader from './sources/basic.vert.wgsl';
 import * as fragShader from './sources/basic.frag.wgsl';
 
 import WebGPURenderer from '../../WebGPURenderer';
-import {IWebGPUPipeline} from '../IWebGPUPipeline';
-import {reserveBuffer} from '../../utils/Utils';
-import {IPipelineMaterialLogic, IWebGPUPipelineMaterialLogic} from '../../../abstract/IPipelineMaterialLogic';
-import {WebGPUModelAdapter} from '../../WebGPUModelAdapter';
-import {WebGPUTex} from '../../WebGPUTexture';
-import {BasicMaterial} from '../../../generic/materials/BasicMaterial';
+import { IWebGPUPipeline } from '../IWebGPUPipeline';
+import { reserveBuffer } from '../../utils/Utils';
+import { IPipelineMaterialLogic, IWebGPUPipelineMaterialLogic } from '../../../abstract/IPipelineMaterialLogic';
+import { WebGPUModelAdapter } from '../../WebGPUModelAdapter';
+import { WebGPUTex } from '../../WebGPUTexture';
+import { BasicMaterial } from '../../../generic/materials/BasicMaterial';
 
 export class BasicPipeline extends IWebGPUPipeline {
     static instance: BasicPipeline | null = null;
@@ -41,39 +41,39 @@ export class BasicPipeline extends IWebGPUPipeline {
 
     private createBindGroupLayoutGlobals() {
         this.globalUniforms = [
-            {binding: 0, resource: {buffer: this.guProjMatrixBuffer}},
-            {binding: 1, resource: {buffer: this.guViewMatrixBuffer}}
+            { binding: 0, resource: { buffer: this.guProjMatrixBuffer } },
+            { binding: 1, resource: { buffer: this.guViewMatrixBuffer } }
         ];
     }
 
     private createBindGroup(): void {
         const positionBufferDesc: GPUVertexBufferLayout = {
-            attributes: [{shaderLocation: 0, offset: 0, format: 'float32x3'}],
+            attributes: [{ shaderLocation: 0, offset: 0, format: 'float32x3' }],
             arrayStride: 4 * 3,
             stepMode: 'vertex'
         };
         const uvBufferDesc: GPUVertexBufferLayout = {
-            attributes: [{shaderLocation: 1, offset: 0, format: 'float32x2'}],
+            attributes: [{ shaderLocation: 1, offset: 0, format: 'float32x2' }],
             arrayStride: 4 * 2,
             stepMode: 'vertex'
         };
 
         // vertex stage description
         const vertex: GPUVertexState = {
-            module: this.renderer.device.createShaderModule({code: vertShader}),
+            module: this.renderer.device.createShaderModule({ code: vertShader }),
             entryPoint: 'main',
             buffers: [positionBufferDesc, uvBufferDesc]
         };
 
         // fragment stage description
         const fragment: GPUFragmentState = {
-            module: this.renderer.device.createShaderModule({code: fragShader}),
+            module: this.renderer.device.createShaderModule({ code: fragShader }),
             entryPoint: 'main',
-            targets: [{format: 'rgba8unorm'}]
+            targets: [{ format: 'rgba8unorm' }]
         };
 
         // misc description
-        const primitive: GPUPrimitiveState = {frontFace: 'cw', cullMode: 'none', topology: 'triangle-list'};
+        const primitive: GPUPrimitiveState = { frontFace: 'cw', cullMode: 'none', topology: 'triangle-list' };
         const depthStencil: GPUDepthStencilState = {
             depthWriteEnabled: true,
             depthCompare: 'less-equal',
@@ -82,14 +82,14 @@ export class BasicPipeline extends IWebGPUPipeline {
 
         this.uniformBindGroupLayout = this.renderer.device.createBindGroupLayout({
             entries: [
-                {binding: 0, visibility: GPUShaderStage.VERTEX, buffer: {type: 'uniform'}},
-                {binding: 1, visibility: GPUShaderStage.VERTEX, buffer: {type: 'uniform'}},
-                {binding: 2, visibility: GPUShaderStage.VERTEX, buffer: {type: 'uniform'}},
-                {binding: 3, visibility: GPUShaderStage.FRAGMENT, buffer: {type: 'uniform'}},
-                {binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: {type: 'uniform'}},
+                { binding: 0, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 1, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 2, visibility: GPUShaderStage.VERTEX, buffer: { type: 'uniform' } },
+                { binding: 3, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+                { binding: 4, visibility: GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
                 // diffuse
-                {binding: 5, visibility: GPUShaderStage.FRAGMENT, sampler: {type: 'filtering'}},
-                {binding: 6, visibility: GPUShaderStage.FRAGMENT, texture: {sampleType: 'float'}}
+                { binding: 5, visibility: GPUShaderStage.FRAGMENT, sampler: { type: 'filtering' } },
+                { binding: 6, visibility: GPUShaderStage.FRAGMENT, texture: { sampleType: 'float' } }
             ]
         });
 
@@ -104,7 +104,7 @@ export class BasicPipeline extends IWebGPUPipeline {
             primitive: primitive,
             depthStencil: depthStencil,
             layout: uniformLayout,
-            multisample: {count: 4}
+            multisample: { count: 4 }
         });
     }
 
@@ -136,7 +136,11 @@ export class BasicPipelineMaterialLogic extends IWebGPUPipelineMaterialLogic {
         this.renderer = renderer;
 
         this.luTintBuffer = reserveBuffer(this.renderer, 4 * 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
-        this.luTintCoefficientLoc = reserveBuffer(this.renderer, 4  *4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+        this.luTintCoefficientLoc = reserveBuffer(
+            this.renderer,
+            4 * 4,
+            GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        );
 
         this.model = model;
         this.material = this.model.material as BasicMaterial;
@@ -145,11 +149,9 @@ export class BasicPipelineMaterialLogic extends IWebGPUPipelineMaterialLogic {
     }
 
     updateLocals(): void {
-        if (this.tint != this.material.tint)
-            this.tint = this.material.tint;
+        if (this.tint != this.material.tint) this.tint = this.material.tint;
 
-        if (this.tintCoefficient != this.material.tintCoefficient)
-            this.tintCoefficient = this.material.tintCoefficient;
+        if (this.tintCoefficient != this.material.tintCoefficient) this.tintCoefficient = this.material.tintCoefficient;
 
         if (this.diffuseTexture.general != this.material.diffuse)
             this.diffuseTexture = new WebGPUTex(this.renderer, this.material.diffuse);
@@ -157,16 +159,19 @@ export class BasicPipelineMaterialLogic extends IWebGPUPipelineMaterialLogic {
         this.renderer.queue.writeBuffer(this.luTintBuffer, 0, this.tint);
 
         // write f32 value with padding (everything should be padded to 16 bytes)
-        this.renderer.queue.writeBuffer(this.luTintCoefficientLoc, 0,
-            new Float32Array([this.tintCoefficient, 0, 0, 0]));
+        this.renderer.queue.writeBuffer(
+            this.luTintCoefficientLoc,
+            0,
+            new Float32Array([this.tintCoefficient, 0, 0, 0])
+        );
     }
 
     requestBindGroup(): GPUBindGroupEntry[] {
         return [
-            {binding: 3, resource: {buffer: this.luTintBuffer}},
-            {binding: 4, resource: {buffer: this.luTintCoefficientLoc}},
-            {binding: 5, resource: this.diffuseTexture.sampler},
-            {binding: 6, resource: this.diffuseTexture.texture.createView()}
+            { binding: 3, resource: { buffer: this.luTintBuffer } },
+            { binding: 4, resource: { buffer: this.luTintCoefficientLoc } },
+            { binding: 5, resource: this.diffuseTexture.sampler },
+            { binding: 6, resource: this.diffuseTexture.texture.createView() }
         ];
     }
 }

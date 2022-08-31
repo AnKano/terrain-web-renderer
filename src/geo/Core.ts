@@ -8,7 +8,7 @@ import { ICamera } from '../renderer/generic/camera/ICamera';
 
 export class Core {
     private originLatLon: LatLon;
-    private origin: Point;
+    private originPoint: Point;
 
     private readonly _layers: NonRegularTileLayer[];
 
@@ -16,6 +16,7 @@ export class Core {
         this._layers = [];
         this._layers.push(new NonRegularTileLayer(this));
 
+        // by default use global zero
         this.setWorldPosition(0.0, 0.0);
     }
 
@@ -25,28 +26,20 @@ export class Core {
 
     public setWorldPosition(lat: number, lon: number): Core {
         this.originLatLon = new LatLon(lat, lon);
-        this.origin = Core.project(this.originLatLon);
+        this.originPoint = GeographyConverter.latLonToWorldPoint(this.originLatLon);
         return this;
     }
 
     public latLonToWorldPoint(coords: LatLon): Point {
-        const projectedPoint = Core.project(coords);
-        vec2.sub(projectedPoint.raw, projectedPoint.raw, this.origin.raw);
+        const projectedPoint = GeographyConverter.latLonToWorldPoint(coords);
+        vec2.sub(projectedPoint.raw, projectedPoint.raw, this.originPoint.raw);
         return projectedPoint;
-    }
-
-    private static project(coords: LatLon): Point {
-        return GeographyConverter.latLonToWorldPoint(coords);
-    }
-
-    private static unproject(point: Point): LatLon {
-        return GeographyConverter.worldPointToLatLon(point);
     }
 
     public worldPointToLatLon(point: Point) {
         const projectedPoint = point.clone();
-        vec2.add(projectedPoint.raw, projectedPoint.raw, this.origin.raw);
-        return Core.unproject(projectedPoint);
+        vec2.add(projectedPoint.raw, projectedPoint.raw, this.originPoint.raw);
+        return GeographyConverter.worldPointToLatLon(projectedPoint);
     }
 
     get layers(): NonRegularTileLayer[] {

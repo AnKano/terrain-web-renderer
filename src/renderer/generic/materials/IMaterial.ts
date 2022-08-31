@@ -1,6 +1,6 @@
-import {Model} from "../Model";
-import IRenderer, {RenderType} from "../../IRenderer";
-import {IPipeline} from "../../abstract/IPipeline";
+import { Model } from '../Model';
+import IRenderer, { RenderType } from '../../IRenderer';
+import { IPipeline } from '../../abstract/IPipeline';
 
 export class IMaterial {
     protected _shaders: Map<RenderType, (arg: IRenderer) => IPipeline>;

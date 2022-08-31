@@ -1,6 +1,6 @@
 import { ITextureAdapter } from '../abstract/ITextureAdapter';
 import WebGPURenderer from './WebGPURenderer';
-import {Texture} from "../generic/Texture";
+import { Texture } from '../generic/Texture';
 
 export class WebGPUTex extends ITextureAdapter {
     private renderer: WebGPURenderer;
@@ -17,7 +17,7 @@ export class WebGPUTex extends ITextureAdapter {
 
         this._general = texture;
 
-        this._sampler = this.renderer.device.createSampler({magFilter: 'linear', minFilter: 'linear'});
+        this._sampler = this.renderer.device.createSampler({ magFilter: 'linear', minFilter: 'linear' });
         this.createFromArrayBuffer(new Uint8Array([0, 0, 0, 255]));
 
         texture.loadPromise.then(() => {
@@ -36,9 +36,7 @@ export class WebGPUTex extends ITextureAdapter {
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
         });
 
-        this.renderer.queue.writeTexture(
-            { texture: this._texture }, buffer, { offset: 0 }, [width, height]
-        );
+        this.renderer.queue.writeTexture({ texture: this._texture }, buffer, { offset: 0 }, [width, height]);
     }
 
     protected createFromBitmap(source: ImageBitmap): void {
@@ -52,9 +50,10 @@ export class WebGPUTex extends ITextureAdapter {
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
         });
 
-        this.renderer.queue.copyExternalImageToTexture(
-            { source: source }, { texture: this._texture }, [source.width, source.height]
-        );
+        this.renderer.queue.copyExternalImageToTexture({ source: source }, { texture: this._texture }, [
+            source.width,
+            source.height
+        ]);
     }
 
     destroy(): void {

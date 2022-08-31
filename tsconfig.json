@@ -1,16 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true
-  },
-  "include": [
-    "definitions/**/*",
-    "src/**/*",
-    "node_modules/@webgpu/types/**/*"
-  ]
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["definitions/**/*", "src/**/*", "node_modules/@webgpu/types/**/*"]
 }

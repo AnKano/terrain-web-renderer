@@ -1,7 +1,7 @@
 import { IPipeline } from '../../abstract/IPipeline';
 import WebGLRenderer from '../WebGLRenderer';
-import {WebGLModelAdapter} from "../WebGLModelAdapter";
-import {IPipelineMaterialLogic} from "../../abstract/IPipelineMaterialLogic";
+import { WebGLModelAdapter } from '../WebGLModelAdapter';
+import { IPipelineMaterialLogic } from '../../abstract/IPipelineMaterialLogic';
 
 export abstract class IWebGLPipeline extends IPipeline {
     protected ctx: WebGL2RenderingContext;
@@ -16,7 +16,10 @@ export abstract class IWebGLPipeline extends IPipeline {
         this.renderer = renderer;
     }
 
-    public abstract producePipelineMaterialLogic(renderer: WebGLRenderer, model: WebGLModelAdapter): IPipelineMaterialLogic;
+    public abstract producePipelineMaterialLogic(
+        renderer: WebGLRenderer,
+        model: WebGLModelAdapter
+    ): IPipelineMaterialLogic;
 
     activate(): void {
         this.ctx.useProgram(this._program);

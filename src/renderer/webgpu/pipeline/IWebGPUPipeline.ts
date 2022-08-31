@@ -1,9 +1,9 @@
 import { IPipeline } from '../../abstract/IPipeline';
 import WebGPURenderer from '../WebGPURenderer';
-import WebGLRenderer from "../../webgl/WebGLRenderer";
-import {WebGLModelAdapter} from "../../webgl/WebGLModelAdapter";
-import {IPipelineMaterialLogic} from "../../abstract/IPipelineMaterialLogic";
-import {WebGPUModelAdapter} from "../WebGPUModelAdapter";
+import WebGLRenderer from '../../webgl/WebGLRenderer';
+import { WebGLModelAdapter } from '../../webgl/WebGLModelAdapter';
+import { IPipelineMaterialLogic } from '../../abstract/IPipelineMaterialLogic';
+import { WebGPUModelAdapter } from '../WebGPUModelAdapter';
 
 export abstract class IWebGPUPipeline extends IPipeline {
     protected renderer: WebGPURenderer;
@@ -18,7 +18,10 @@ export abstract class IWebGPUPipeline extends IPipeline {
         this.renderer = renderer;
     }
 
-    public abstract producePipelineMaterialLogic(renderer: WebGPURenderer, model: WebGPUModelAdapter): IPipelineMaterialLogic;
+    public abstract producePipelineMaterialLogic(
+        renderer: WebGPURenderer,
+        model: WebGPUModelAdapter
+    ): IPipelineMaterialLogic;
 
     activate(): void {
         this.renderer.passEncoder.setPipeline(this.pipeline);

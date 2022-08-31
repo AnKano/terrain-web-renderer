@@ -47,6 +47,11 @@ export class GeographyConverter {
     }
 
     static quadcodeToTilecode(quadcode: string): number[] {
+        const regex = new RegExp('^\\d+$');
+        if (!regex.exec(quadcode)) {
+            throw 'unexpected string input!';
+        }
+
         const z = quadcode.length;
         let x = 0,
             y = 0;

@@ -63,11 +63,9 @@ export class WebGLMesh extends IMeshAdapter {
 
         // unbind VAO
         this.ctx.bindVertexArray(null);
-        console.log(this, this.vao)
     }
 
     draw() {
-
         // bind VAO
         this.ctx.bindVertexArray(this.vao);
 
