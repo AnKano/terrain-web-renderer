@@ -104,8 +104,6 @@ const render = (): void => {
                 model.material = material;
 
                 modelsCache.set(tile.quadcode, model);
-
-                console.log(tile)
             }
 
             scene.add(modelsCache.get(tile.quadcode));
